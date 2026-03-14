@@ -54,6 +54,7 @@ export async function startOAuthFlow(): Promise<TokenData> {
   const state = crypto.randomBytes(16).toString("hex");
 
   return new Promise((resolve, reject) => {
+    const openSockets = new Set<import("net").Socket>();
     const server = http.createServer(async (req, res) => {
       const url = new URL(
         req.url || "",
@@ -70,7 +71,7 @@ export async function startOAuthFlow(): Promise<TokenData> {
           res.end(
             `<html><body><h1>Authorization Failed</h1><p>${error}</p></body></html>`
           );
-          server.close();
+          forceCloseServer();
           reject(new Error(`OAuth error: ${error}`));
           return;
         }
@@ -78,7 +79,7 @@ export async function startOAuthFlow(): Promise<TokenData> {
         if (returnedState !== state) {
           res.writeHead(400, { "Content-Type": "text/html" });
           res.end("<html><body><h1>Invalid State</h1></body></html>");
-          server.close();
+          forceCloseServer();
           reject(new Error("Invalid OAuth state"));
           return;
         }
@@ -88,7 +89,7 @@ export async function startOAuthFlow(): Promise<TokenData> {
           res.end(
             "<html><body><h1>No Code Received</h1></body></html>"
           );
-          server.close();
+          forceCloseServer();
           reject(new Error("No authorization code received"));
           return;
         }
@@ -142,14 +143,14 @@ export async function startOAuthFlow(): Promise<TokenData> {
             </html>
           `);
 
-          server.close();
+          forceCloseServer();
           resolve(token);
         } catch (err) {
           res.writeHead(500, { "Content-Type": "text/html" });
           res.end(
             `<html><body><h1>Token Exchange Failed</h1><p>${err}</p></body></html>`
           );
-          server.close();
+          forceCloseServer();
           reject(err);
         }
       } else {
@@ -157,6 +158,18 @@ export async function startOAuthFlow(): Promise<TokenData> {
         res.end("Not Found");
       }
     });
+
+    server.on("connection", (socket) => {
+      openSockets.add(socket);
+      socket.on("close", () => openSockets.delete(socket));
+    });
+
+    function forceCloseServer() {
+      server.close();
+      for (const socket of openSockets) {
+        socket.destroy();
+      }
+    }
 
     server.listen(CALLBACK_PORT, () => {
       const authUrl = new URL(`${API_BASE_URL}/oauth/authorize`);
@@ -192,7 +205,7 @@ export async function startOAuthFlow(): Promise<TokenData> {
     });
 
     setTimeout(() => {
-      server.close();
+      forceCloseServer();
       reject(new Error("Authentication timeout - please try again"));
     }, 5 * 60 * 1000);
   });
