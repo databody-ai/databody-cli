@@ -5,13 +5,13 @@ A command-line interface for [DataBody](https://databody.ai) health and fitness 
 ## Installation
 
 ```bash
-npm install -g @databody/cli
+npm install -g databody-cli
 ```
 
 Or run directly:
 
 ```bash
-npx @databody/cli <command>
+npx databody-cli <command>
 ```
 
 ## Authentication

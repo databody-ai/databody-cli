@@ -1,5 +1,5 @@
 {
-  "name": "@databody/cli",
+  "name": "databody-cli",
   "version": "1.0.0",
   "description": "DataBody CLI - Health & Fitness Tracking for local LLMs",
   "main": "dist/index.js",
