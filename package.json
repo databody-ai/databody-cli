@@ -12,18 +12,30 @@
     "start": "node dist/index.js",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "prepublishOnly": "npm run build"
   },
   "keywords": [
     "databody",
     "health",
     "fitness",
     "nutrition",
+    "macros",
+    "calories",
     "cli",
-    "llm"
+    "llm",
+    "ai"
   ],
   "author": "DataBody",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/databody-ai/databody-cli.git"
+  },
+  "bugs": {
+    "url": "https://github.com/databody-ai/databody-cli/issues"
+  },
+  "homepage": "https://github.com/databody-ai/databody-cli#readme",
   "engines": {
     "node": ">=20.0.0"
   },
