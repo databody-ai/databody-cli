@@ -199,13 +199,13 @@ Exit codes:
 
 | Variable | Description | Default |
 |----------|-------------|---------|
-| `DATABODY_API_URL` | DataBody API URL | `http://localhost:3000` |
+| `DATABODY_API_URL` | DataBody API URL | `https://databody.ai` |
 | `DATABODY_CALLBACK_PORT` | OAuth callback port | `8787` |
 
-For production use:
+For local development:
 
 ```bash
-export DATABODY_API_URL=https://databody.ai
+export DATABODY_API_URL=http://localhost:3000
 ```
 
 ## Development
