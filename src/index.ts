@@ -11,6 +11,7 @@ import { registerThreadsCommands } from "./commands/threads.js";
 import { registerNotesCommands } from "./commands/notes.js";
 import { registerHouseholdsCommands } from "./commands/households.js";
 import { registerInvitesCommands } from "./commands/invites.js";
+import { registerSavedMealsCommands } from "./commands/saved-meals.js";
 import { apiCall } from "./lib/api.js";
 import { output, withErrorHandler } from "./lib/output.js";
 
@@ -19,7 +20,7 @@ const program = new Command();
 program
   .name("databody")
   .description("DataBody CLI - Health & Fitness Tracking")
-  .version("1.0.0")
+  .version("1.0.2")
   .option("--pretty", "Pretty-print JSON output");
 
 // Register domain subcommands
@@ -35,6 +36,7 @@ registerThreadsCommands(program);
 registerNotesCommands(program);
 registerHouseholdsCommands(program);
 registerInvitesCommands(program);
+registerSavedMealsCommands(program);
 
 // Top-level shortcuts
 program

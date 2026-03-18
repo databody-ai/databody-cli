@@ -1,6 +1,6 @@
 {
   "name": "databody-cli",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "DataBody CLI - Health & Fitness Tracking for local LLMs",
   "main": "dist/index.js",
   "bin": {
