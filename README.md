@@ -110,6 +110,22 @@ databody goals calculate <id>        # Recalculate from current health data
 
 ### Workouts
 
+Version 1.1.0 adds DataBody Lift programs and set-level tracking. Discover the exact nested input schema without signing in:
+
+```bash
+databody workouts schema create_workout_program
+databody workouts programs list
+databody workouts programs create --file program.json
+databody workouts programs get --program-id 1
+databody workouts programs update --program-id 1 --expected-revision 0 --file revised-program.json
+```
+
+See [structured workouts](docs/structured-workouts.md) and the included [program JSON example](examples/lift-program.json). Replace example targets with the user's supplied plan. Array order controls days, moves and sets; editing `days` replaces the full list, so retain existing occurrence IDs and all items that should remain. Creating a program also creates any named library moves that omit a numeric `move_id`.
+
+All structured commands return JSON and accept `--file -` for stdin, `--file path`, `--json '{...}'` and typed flags. `databody workouts schema` returns all 37 tool contracts, including nested types and required fields. Program changes affect future sessions; active workouts have separate session/set commands.
+
+Legacy activity-summary commands remain available:
+
 ```bash
 databody workouts recent --limit 20
 databody workouts list --start 2026-01-01 --type running
@@ -200,6 +216,7 @@ Exit codes:
 | Variable | Description | Default |
 |----------|-------------|---------|
 | `DATABODY_API_URL` | DataBody API URL | `https://databody.ai` |
+| `DATABODY_TOKEN_FILE` | Optional credential-file override for a separate agent or test profile | `~/.databody_token.json` |
 | `DATABODY_CALLBACK_PORT` | OAuth callback port | `8787` |
 
 For local development:

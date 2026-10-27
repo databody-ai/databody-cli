@@ -7,4 +7,4 @@ export const CLIENT_ID = "databody-mcp";
 export const CALLBACK_PORT = parseInt(
   process.env.DATABODY_CALLBACK_PORT || "8787"
 );
-export const TOKEN_FILE = path.join(os.homedir(), ".databody_token.json");
+export const TOKEN_FILE = process.env.DATABODY_TOKEN_FILE || path.join(os.homedir(), ".databody_token.json");

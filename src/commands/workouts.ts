@@ -1,11 +1,13 @@
 import { Command } from "commander";
 import { apiCall } from "../lib/api.js";
 import { output, withErrorHandler } from "../lib/output.js";
+import { registerWorkoutTrainingCommands } from "./workout-training.js";
 
 export function registerWorkoutsCommands(program: Command) {
   const workouts = program
     .command("workouts")
     .description("Workout tracking");
+  registerWorkoutTrainingCommands(workouts, program);
 
   workouts
     .command("recent")

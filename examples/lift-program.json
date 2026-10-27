@@ -1,0 +1,41 @@
+{
+  "name": "Lift Strength",
+  "days": [
+    {
+      "id": "upper-a",
+      "name": "Upper A",
+      "moves": [
+        {
+          "id": "bench-press",
+          "name": "Bench Press",
+          "unit": "lb",
+          "load_basis": "total",
+          "increment": 5,
+          "sets": [
+            { "reps_min": 6, "reps_max": 8, "weight": 135, "rest_seconds": 90 },
+            { "reps_min": 6, "reps_max": 8, "weight": 135, "rest_seconds": 90 },
+            { "reps_min": 6, "reps_max": 8, "weight": 135, "rest_seconds": 90 }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lower-a",
+      "name": "Lower A",
+      "moves": [
+        {
+          "id": "squat",
+          "name": "Squat",
+          "unit": "lb",
+          "load_basis": "total",
+          "increment": 5,
+          "sets": [
+            { "reps_min": 6, "reps_max": 8, "weight": 135, "rest_seconds": 120 },
+            { "reps_min": 6, "reps_max": 8, "weight": 135, "rest_seconds": 120 },
+            { "reps_min": 6, "reps_max": 8, "weight": 135, "rest_seconds": 120 }
+          ]
+        }
+      ]
+    }
+  ]
+}
