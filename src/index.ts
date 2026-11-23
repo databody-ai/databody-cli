@@ -20,7 +20,7 @@ const program = new Command();
 program
   .name("databody")
   .description("DataBody CLI - Health & Fitness Tracking")
-  .version("1.1.0")
+  .version("1.2.0")
   .option("--pretty", "Pretty-print JSON output");
 
 // Register domain subcommands

@@ -2,6 +2,40 @@
 
 These commands require the DataBody workout-training API. Existing `workouts list`, `create`, `update` and `delete` activity-summary commands remain available.
 
+## One-offs
+
+`workouts one-offs list` returns available plans and the account's `time_zone` and `fetched_at`. Use those to resolve “today” or “tomorrow,” and check the move library before scheduling. Set `scheduled_on` to the desired account-local date (`YYYY-MM-DD`) and supply ordered moves and set targets.
+
+```sh
+databody workouts schema create_workout_one_off
+databody workouts one-offs list
+databody workouts one-offs create --file one-off.json --client-id full-body-2026-11-23
+databody workouts one-offs update --one-off-id 42 --expected-revision 0 --scheduled-on 2026-11-24
+databody workouts one-offs remove --one-off-id 42 --expected-revision 1
+databody workouts sessions list --kind one_off
+```
+
+For example, `one-off.json` can contain the following. Substitute the intended date, your library move IDs, and your planned set targets.
+
+```json
+{
+  "name": "Full Body",
+  "scheduled_on": "2026-11-23",
+  "moves": [
+    {
+      "move_id": 7,
+      "sets": [
+        { "reps_min": 8, "reps_max": 10, "weight": 95, "rest_seconds": 90 }
+      ]
+    }
+  ]
+}
+```
+
+Keep the same `client_id` on retries. Use the listed ID and revision for edits and removals. A date-only edit preserves the moves. The user starts the saved plan in the iPhone or Watch One-offs picker. After completion it appears in Lift under **History → One-offs**.
+
+## Programs, sessions, and moves
+
 ```sh
 databody workouts schema create_workout_program
 databody workouts programs list

@@ -11,6 +11,7 @@ const contract = contractData as unknown as Definition[];
 const routes: Record<string,[string,string]> = {
  list_workout_moves:['moves','list'], create_workout_move:['moves','create'], update_workout_move:['moves','update'], archive_workout_move:['moves','archive'], get_move_history:['moves','history'],
  list_workout_programs:['programs','list'], get_workout_program:['programs','get'], create_workout_program:['programs','create'], update_workout_program:['programs','update'], archive_workout_program:['programs','archive'],
+ list_workout_one_offs:['one-offs','list'], create_workout_one_off:['one-offs','create'], update_workout_one_off:['one-offs','update'], remove_workout_one_off:['one-offs','remove'],
  get_active_workout_session:['sessions','active'], get_workout_session:['sessions','get'], list_workout_sessions:['sessions','list'], start_workout_session:['sessions','start'], import_workout_session:['sessions','import'],
  pause_workout_session:['sessions','pause'], resume_workout_session:['sessions','resume'], complete_workout_session:['sessions','complete'], cancel_workout_session:['sessions','cancel'], delete_workout_session:['sessions','delete'], advance_workout_session:['sessions','next'], add_workout_session_move:['sessions','add-move'], set_next_workout_move:['sessions','set-next'],
  log_workout_set:['sets','log'], update_workout_set:['sets','update'], undo_workout_set:['sets','undo'], set_workout_set_weight:['sets','weight'], get_workout_progression:['progression','get'], apply_workout_progression:['progression','apply'],
@@ -23,6 +24,7 @@ export function prepareWorkoutRequest(definition:Definition,input:Record<string,
  const body={...input};
  const path=definition.path.replace(/\{(\w+)\}/g,(_,key:string)=>{if(body[key]===undefined)throw new Error(`${key} is required`);const v=String(body[key]);delete body[key];return encodeURIComponent(v)});
  if(['command','start_session','import_session'].includes(definition.operation))body.client_id??=randomUUID();
+ if(definition.operation==='save_one_off'&&definition.method==='POST')body.client_id??=randomUUID();
  if(definition.command)body.type=definition.command;
  if(definition.method==='GET')return {path:path+(Object.keys(body).length?'?'+new URLSearchParams(Object.entries(body).map(([k,v]):[string,string]=>[k,String(v)])):''),method:'GET',body:undefined};
  return {path,method:definition.method,body};

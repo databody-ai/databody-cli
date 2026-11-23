@@ -110,7 +110,7 @@ databody goals calculate <id>        # Recalculate from current health data
 
 ### Workouts
 
-Version 1.1.0 adds DataBody Lift programs and set-level tracking. Discover the exact nested input schema without signing in:
+Version 1.2.0 adds scheduled DataBody Lift one-offs alongside programs and set-level tracking. Discover the exact nested input schema without signing in:
 
 ```bash
 databody workouts schema create_workout_program
@@ -118,11 +118,14 @@ databody workouts programs list
 databody workouts programs create --file program.json
 databody workouts programs get --program-id 1
 databody workouts programs update --program-id 1 --expected-revision 0 --file revised-program.json
+databody workouts schema create_workout_one_off
+databody workouts one-offs list
+databody workouts one-offs create --file one-off.json --client-id full-body-2026-11-23
 ```
 
 See [structured workouts](docs/structured-workouts.md) and the included [program JSON example](examples/lift-program.json). Replace example targets with the user's supplied plan. Array order controls days, moves and sets; editing `days` replaces the full list, so retain existing occurrence IDs and all items that should remain. Creating a program also creates any named library moves that omit a numeric `move_id`.
 
-All structured commands return JSON and accept `--file -` for stdin, `--file path`, `--json '{...}'` and typed flags. `databody workouts schema` returns all 37 tool contracts, including nested types and required fields. Program changes affect future sessions; active workouts have separate session/set commands.
+All structured commands return JSON and accept `--file -` for stdin, `--file path`, `--json '{...}'` and typed flags. `databody workouts schema` returns all 41 tool contracts, including nested types and required fields. Start scheduled one-offs from the Lift picker on iPhone or Apple Watch.
 
 Legacy activity-summary commands remain available:
 

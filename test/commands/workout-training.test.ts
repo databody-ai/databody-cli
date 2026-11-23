@@ -44,6 +44,19 @@ describe('structured workout commands',()=>{
    inputSchema:expect.objectContaining({required:['name','days'],properties:expect.objectContaining({days:expect.objectContaining({type:'array'})})})
   }),undefined);
  });
+ it('lists, schedules, edits and removes one-offs through the shared routes',async()=>{
+  const p=new Command();registerWorkoutsCommands(p);
+  const cli=(...args:string[])=>p.parseAsync(['node','databody','workouts','one-offs',...args]);
+  await cli('list');
+  expect(apiCall).toHaveBeenLastCalledWith('/workout_one_offs','GET',undefined);
+  const moves=[{move_id:7,sets:[{reps_min:8,reps_max:10,weight:95,rest_seconds:90}]}];
+  await cli('create','--name','Full Body','--scheduled-on','2026-11-23','--moves',JSON.stringify(moves));
+  expect(apiCall).toHaveBeenLastCalledWith('/workout_one_offs','POST',{name:'Full Body',scheduled_on:'2026-11-23',moves,client_id:expect.any(String)});
+  await cli('update','--one-off-id','42','--expected-revision','0','--scheduled-on','2026-11-24');
+  expect(apiCall).toHaveBeenLastCalledWith('/workout_one_offs/42','PATCH',{scheduled_on:'2026-11-24',expected_revision:0});
+  await cli('remove','--one-off-id','42','--expected-revision','1');
+  expect(apiCall).toHaveBeenLastCalledWith('/workout_one_offs/42','DELETE',{expected_revision:1});
+ });
  it('preserves nested sets, stable occurrence IDs and the revision when editing a program',async()=>{
   const p=new Command();registerWorkoutsCommands(p);
   const days=[{id:'upper-a',name:'Upper A',moves:[{id:'bench',move_id:7,sets:[{reps_min:6,reps_max:8,weight:135,rest_seconds:90}]}]}];

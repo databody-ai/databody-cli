@@ -481,6 +481,294 @@
     }
   },
   {
+    "name": "list_workout_one_offs",
+    "description": "List available scheduled one-offs, their revisions and the account timezone.",
+    "method": "GET",
+    "path": "/workout_one_offs",
+    "operation": "one_offs",
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "create_workout_one_off",
+    "description": "Schedule a single workout for today or a future day. It appears in Lift's One-offs picker and starts when the user taps it.",
+    "method": "POST",
+    "path": "/workout_one_offs",
+    "operation": "save_one_off",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "client_id": {
+          "type": "string",
+          "description": "Stable caller-generated ID; reuse the same ID when retrying the same operation",
+          "maxLength": 100
+        },
+        "name": {
+          "type": "string",
+          "description": "Name shown in the Lift workout picker"
+        },
+        "scheduled_on": {
+          "type": "string",
+          "description": "Date in the user's DataBody account timezone, YYYY-MM-DD"
+        },
+        "moves": {
+          "type": "array",
+          "description": "Complete ordered move list and set targets; reuse library move IDs when available",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Stable occurrence ID; generate a new ID when duplicating a day move"
+              },
+              "move_id": {
+                "type": "integer",
+                "description": "User-owned resource ID returned by a read tool"
+              },
+              "name": {
+                "type": "string",
+                "description": "Move name, required when creating a new library move"
+              },
+              "unit": {
+                "type": "string",
+                "description": "Load unit",
+                "enum": [
+                  "lb",
+                  "kg"
+                ]
+              },
+              "load_basis": {
+                "type": "string",
+                "description": "Meaning of the load",
+                "enum": [
+                  "total",
+                  "per_hand",
+                  "bodyweight"
+                ]
+              },
+              "increment": {
+                "type": "number",
+                "description": "Suggested future load increase",
+                "exclusiveMinimum": 0
+              },
+              "sets": {
+                "type": "array",
+                "description": "Ordered planned sets",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "reps_min": {
+                      "type": "integer",
+                      "description": "Bottom of target rep range",
+                      "minimum": 1
+                    },
+                    "reps_max": {
+                      "type": "integer",
+                      "description": "Top of target rep range",
+                      "minimum": 1
+                    },
+                    "weight": {
+                      "type": "number",
+                      "description": "Planned load in the move's unit",
+                      "minimum": 0
+                    },
+                    "rest_seconds": {
+                      "type": "integer",
+                      "description": "Rest cue threshold; clock continues after this",
+                      "minimum": 0
+                    }
+                  },
+                  "required": [
+                    "reps_min",
+                    "reps_max",
+                    "weight",
+                    "rest_seconds"
+                  ],
+                  "additionalProperties": false
+                },
+                "minItems": 1,
+                "maxItems": 10
+              },
+              "notes": {
+                "type": "string",
+                "description": "Initial notes for a new library move. For existing types, use update_workout_move or set_workout_move_notes to edit notes.",
+                "maxLength": 2000
+              }
+            },
+            "required": [
+              "sets"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1,
+          "maxItems": 50
+        }
+      },
+      "required": [
+        "name",
+        "scheduled_on",
+        "moves"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "update_workout_one_off",
+    "description": "Edit or reschedule an available one-off. Supply its current revision from the list.",
+    "method": "PATCH",
+    "path": "/workout_one_offs/{one_off_id}",
+    "operation": "save_one_off",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "one_off_id": {
+          "type": "integer",
+          "description": "User-owned resource ID returned by a read tool"
+        },
+        "expected_revision": {
+          "type": "integer",
+          "description": "Current revision returned by the resource; prevents overwriting a newer edit",
+          "minimum": 0
+        },
+        "name": {
+          "type": "string",
+          "description": "Name shown in the Lift workout picker"
+        },
+        "scheduled_on": {
+          "type": "string",
+          "description": "Date in the user's DataBody account timezone, YYYY-MM-DD"
+        },
+        "moves": {
+          "type": "array",
+          "description": "Complete ordered move list and set targets; reuse library move IDs when available",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Stable occurrence ID; generate a new ID when duplicating a day move"
+              },
+              "move_id": {
+                "type": "integer",
+                "description": "User-owned resource ID returned by a read tool"
+              },
+              "name": {
+                "type": "string",
+                "description": "Move name, required when creating a new library move"
+              },
+              "unit": {
+                "type": "string",
+                "description": "Load unit",
+                "enum": [
+                  "lb",
+                  "kg"
+                ]
+              },
+              "load_basis": {
+                "type": "string",
+                "description": "Meaning of the load",
+                "enum": [
+                  "total",
+                  "per_hand",
+                  "bodyweight"
+                ]
+              },
+              "increment": {
+                "type": "number",
+                "description": "Suggested future load increase",
+                "exclusiveMinimum": 0
+              },
+              "sets": {
+                "type": "array",
+                "description": "Ordered planned sets",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "reps_min": {
+                      "type": "integer",
+                      "description": "Bottom of target rep range",
+                      "minimum": 1
+                    },
+                    "reps_max": {
+                      "type": "integer",
+                      "description": "Top of target rep range",
+                      "minimum": 1
+                    },
+                    "weight": {
+                      "type": "number",
+                      "description": "Planned load in the move's unit",
+                      "minimum": 0
+                    },
+                    "rest_seconds": {
+                      "type": "integer",
+                      "description": "Rest cue threshold; clock continues after this",
+                      "minimum": 0
+                    }
+                  },
+                  "required": [
+                    "reps_min",
+                    "reps_max",
+                    "weight",
+                    "rest_seconds"
+                  ],
+                  "additionalProperties": false
+                },
+                "minItems": 1,
+                "maxItems": 10
+              },
+              "notes": {
+                "type": "string",
+                "description": "Initial notes for a new library move. For existing types, use update_workout_move or set_workout_move_notes to edit notes.",
+                "maxLength": 2000
+              }
+            },
+            "required": [
+              "sets"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1,
+          "maxItems": 50
+        }
+      },
+      "required": [
+        "one_off_id",
+        "expected_revision"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "remove_workout_one_off",
+    "description": "Remove an available one-off from the Lift picker.",
+    "method": "DELETE",
+    "path": "/workout_one_offs/{one_off_id}",
+    "operation": "archive_one_off",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "one_off_id": {
+          "type": "integer",
+          "description": "User-owned resource ID returned by a read tool"
+        },
+        "expected_revision": {
+          "type": "integer",
+          "description": "Current revision returned by the resource; prevents overwriting a newer edit",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "one_off_id",
+        "expected_revision"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
     "name": "get_active_workout_session",
     "description": "Look up the current workout before logging sets or changing its sequence. Returns null when none is active.",
     "method": "GET",
@@ -515,7 +803,7 @@
   },
   {
     "name": "list_workout_sessions",
-    "description": "List bounded workout-session history by the user's local dates.",
+    "description": "List bounded workout-session history by the user's local dates. Use kind=one_off for one-off sessions.",
     "method": "GET",
     "path": "/workout_sessions",
     "operation": "sessions",
@@ -529,6 +817,14 @@
         "end_date": {
           "type": "string",
           "description": "YYYY-MM-DD"
+        },
+        "kind": {
+          "type": "string",
+          "description": "Filter to one-off sessions or regular sessions",
+          "enum": [
+            "one_off",
+            "regular"
+          ]
         },
         "limit": {
           "type": "integer",
